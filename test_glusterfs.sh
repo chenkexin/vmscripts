@@ -47,7 +47,7 @@ ssh -p 2222 root@localhost "./filebench.sh write_behind_8"
 sleep 10
 kill_qemu
 
-#sleep 5
+sleep 5
 
 #setup
 sudo gluster volume set image performance.write-behind-window-size 16048676

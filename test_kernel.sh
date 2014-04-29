@@ -39,6 +39,7 @@ sleep 15
 ssh -p 2222 root@localhost "./filebench.sh $3"
 sleep 5
 kill_qemu
+sleep 10
 }
 
 if [ $# -ne 2 ];then 

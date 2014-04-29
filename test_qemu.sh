@@ -43,37 +43,46 @@ setup
 
 #baseline
 echo "baseline"
-echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=none,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
+#echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=none,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
 sleep 15
 ssh -p 2222 root@localhost "./filebench.sh baseline"
 sleep 5
 kill_qemu
-
+sleep 5
+sleep 10
 #off virtio
 
-echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=none,format=raw,cache=none,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
+#echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=none,format=raw,cache=none,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
 sleep 15
 ssh -p 2222 root@localhost "./filebench.sh off_virtio"
 sleep 10
 #run_workload "off_virtio"
-
+kill_qemu
+sleep 5
+sleep 10
 #cache=writeback|writethrough|unsafe|none
 echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=writeback,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
 sleep 15
 ssh -p 2222 root@localhost "./filebench.sh cache_writeback"
 #sleep 5
 kill_qemu
+sleep 5
+sleep 10
 
 echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=writethrough,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
 sleep 15
 ssh -p 2222 root@localhost "./filebench.sh cache_writethrough"
 sleep 5
 kill_qemu
-
+sleep 5
+sleep 10
+echo "unsafe"
 echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=unsafe,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
 sleep 15
 ssh -p 2222 root@localhost "./filebench.sh cache_unsafe"
 kill_qemu
+sleep 10
+sleep 5
 
 #format=qcow2
 #`qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$3,if=virtio,format=qcow2,cache=none,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0`
@@ -81,11 +90,12 @@ kill_qemu
 
 #aio=none
 echo "aio=none"
-echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=none,aio=none -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0"|bash -x
+echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster://$1/$2,if=virtio,format=raw,cache=none,aio=none -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
 sleep 15
-ssh -P 2222 root@localhost "./filebench.sh aio_none"
+ssh -p 2222 root@localhost "./filebench.sh aio_none"
 sleep 5
 kill_qemu
+sleep 5
 sleep 10
 
 
@@ -96,6 +106,7 @@ sleep 15
 ssh -p 2222 root@localhost "./filebench.sh rdma "
 sleep 10
 kill_qemu
+sleep 5
 sleep 10
 
 #echo "qemu-system-x86_64 --enable-kvm -m 2048 -smp 4 -drive file=gluster+unix://$2/$3,if=virtio,format=raw,cache=none,aio=threads -netdev "user,id=user.0,hostfwd=tcp:0.0.0.0:2222-:22" -device e1000,netdev=user.0 &"|bash -x
